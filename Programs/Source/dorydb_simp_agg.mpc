@@ -21,7 +21,7 @@ def _(i):
     # party 0 supplies the DB
     # which is secret shared here
     for j in range(ftrs):
-        db[i][j] = sint(j)
+        db[i][j] = sint(((i) % 64) + j)
         #db[i][j] = sint.get_input_from(0)
 
 @for_range_opt(c)
@@ -29,7 +29,7 @@ def f(i):
     # party 1 supplies the intervals
     # which is secret shared here
     intervals[i][0] = sint(0)
-    intervals[i][1] = sint(255)
+    intervals[i][1] = sint(126)
     #intervals[i][0] = sint.get_input_from(1)
     #intervals[i][1] = sint.get_input_from(1)
 
