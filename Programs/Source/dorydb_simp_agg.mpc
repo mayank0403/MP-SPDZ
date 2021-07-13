@@ -5,7 +5,7 @@
 # no of conditions
 c = 5
 # no of records in DB
-R = 1024
+R = (1 << 15)
 # no of features in DB
 # assuming = c now
 ftrs = c + 1
@@ -21,7 +21,7 @@ def _(i):
     # party 0 supplies the DB
     # which is secret shared here
     for j in range(ftrs):
-        db[i][j] = sint(i + j)
+        db[i][j] = sint(j)
         #db[i][j] = sint.get_input_from(0)
 
 @for_range_opt(c)
@@ -29,7 +29,7 @@ def f(i):
     # party 1 supplies the intervals
     # which is secret shared here
     intervals[i][0] = sint(0)
-    intervals[i][1] = sint(10000)
+    intervals[i][1] = sint(255)
     #intervals[i][0] = sint.get_input_from(1)
     #intervals[i][1] = sint.get_input_from(1)
 
@@ -54,8 +54,8 @@ def g(i):
         # this should be merged with upper loop to prevent additional
         # rounds
         #in_interval[0] = (in_interval[0] & in_interval[j])
-    #agg = agg + ((in_interval).if_else(db[i][ftrs - 1], sint(0)))
+    agg = agg + ((in_interval).if_else(db[i][ftrs - 1], sint(0)))
 
-#agg = agg.reveal()
-#print_ln('Answer is: %s', agg)
+agg = agg.reveal()
+print_ln('Answer is: %s', agg)
     
