@@ -1,0 +1,61 @@
+# sint: secret integers
+
+# you can assign public numbers to sint
+
+# no of conditions
+c = 5
+# no of records in DB
+R = 1024*100
+# no of features in DB
+# assuming = c now
+ftrs = c + 1
+
+db = Matrix(R, ftrs, sint)
+intervals = Matrix(c, 2, sint)
+
+# use @for_range_opt for balanced optimization 
+# but use Python loops if compile-time numbers are need (e.g., for players)
+
+@for_range_opt(R)
+def _(i):
+    # party 0 supplies the DB
+    # which is secret shared here
+    for j in range(ftrs):
+        db[i][j] = sint(i + j)
+        #db[i][j] = sint.get_input_from(0)
+
+@for_range_opt(c)
+def f(i):
+    # party 1 supplies the intervals
+    # which is secret shared here
+    intervals[i][0] = sint(0)
+    intervals[i][1] = sint(10000)
+    #intervals[i][0] = sint.get_input_from(1)
+    #intervals[i][1] = sint.get_input_from(1)
+
+#in_interval = Array(c, sint)
+agg = sint(0)
+in_interval = sintbit(1)
+
+@for_range_opt(R)
+def g(i):
+    global agg
+    global in_interval
+    in_interval = sintbit(1)
+    @for_range_opt(c)
+    def h(j):
+        global in_interval
+        temp_l = (intervals[j][0] < db[i][j])
+        temp_r = (intervals[j][1] > db[i][j])
+        in_interval = in_interval & temp_l
+        in_interval = in_interval & temp_r
+    #@for_range_opt(c-1)
+    #def ff(j):
+        # this should be merged with upper loop to prevent additional
+        # rounds
+        #in_interval[0] = (in_interval[0] & in_interval[j])
+    agg = agg + ((in_interval).if_else(db[i][ftrs - 1], sint(0)))
+
+agg = agg.reveal()
+print_ln('Answer is: %s', agg)
+    
