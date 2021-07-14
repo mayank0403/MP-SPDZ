@@ -5,7 +5,7 @@
 # no of conditions
 c = 5
 # no of records in DB
-R = (1 << 15)
+R = (1 << 16)
 # no of features in DB
 # assuming = c now
 ftrs = c + 1
