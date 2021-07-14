@@ -13,6 +13,8 @@ ftrs = c + 1
 db = Matrix(R, ftrs, sint)
 intervals = Matrix(c, 2, sint)
 
+# cleartext at MP-SPDZ/plain.py
+
 # use @for_range_opt for balanced optimization 
 # but use Python loops if compile-time numbers are need (e.g., for players)
 
@@ -21,14 +23,14 @@ def _(i):
     # party 0 supplies the DB
     # which is secret shared here
     for j in range(ftrs):
-        db[i][j] = sint(((i) % 64) + j)
+        db[i][j] = sint(((i) % 65) + j)
         #db[i][j] = sint.get_input_from(0)
 
 @for_range_opt(c)
 def f(i):
     # party 1 supplies the intervals
     # which is secret shared here
-    intervals[i][0] = sint(0)
+    intervals[i][0] = sint(63)
     intervals[i][1] = sint(126)
     #intervals[i][0] = sint.get_input_from(1)
     #intervals[i][1] = sint.get_input_from(1)
@@ -39,6 +41,8 @@ agg = sint(0)
 in_interval_l = Matrix(R, c, sintbit)
 in_interval_r = Matrix(R, c, sintbit)
 in_interval_f = Array(R, sintbit)
+activated_val = Array(R, sint)
+
 @for_range_opt(R)
 def fff(i):
     in_interval_f[i] = sintbit(1)
@@ -59,11 +63,19 @@ def g(i):
         in_interval_f[i] = in_interval_f[i] & in_interval_l[i][j]
         in_interval_f[i] = in_interval_f[i] & in_interval_r[i][j]
 
+@for_range_opt_multithread(8, R)
+def g(i):
+    global activated_val
+    global in_interval_f
+    activated_val[i] = (in_interval_f[i]).if_else(db[i][ftrs - 1], sint(0))
+
 @for_range_opt(R)
 def g(i):
     global agg
+    global activated_val
     global in_interval_f
-    agg = agg + ((in_interval_f[i]).if_else(db[i][ftrs - 1], sint(0)))
+    #agg = agg + ((in_interval_f[i]).if_else(db[i][ftrs - 1], sint(0)))
+    agg = agg + activated_val[i]
 
 agg = agg.reveal()
 print_ln('Answer is: %s', agg)
