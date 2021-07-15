@@ -39,5 +39,5 @@ for i in range(R):
 
 
 print(agg_c)
-print(agg_c % 256)
+print(agg_c % (1 << 64))
 
