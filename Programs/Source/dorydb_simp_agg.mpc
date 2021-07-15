@@ -7,6 +7,7 @@ c = 5
 # no of records in DB
 R = (1 << 16)
 bucket_sz = 8
+threads = 8
 # no of features in DB
 # assuming = c now
 ftrs = c + 1
@@ -20,7 +21,7 @@ intervals_small = Matrix(c, 2, sint)
 # use @for_range_opt for balanced optimization 
 # but use Python loops if compile-time numbers are need (e.g., for players)
 
-@for_range_opt_multithread(8, R)
+@for_range_opt_multithread(threads, R)
 def _(i):
     # party 0 supplies the DB
     # which is secret shared here
@@ -50,32 +51,56 @@ activated_val = Array(R, sint)
 def fff(i):
     in_interval_f[i] = sintbit(1)
 
-#left = intervals[0][0]
-#right = intervals[0][1]
-#print_ln('%s', left[0].type())
+# option 0
+#lft = Matrix(c, bucket_sz, sbitint)
+#rgt = Matrix(c, bucket_sz, sbitint)
+#@for_range_opt_multithread(threads, c)
+#def fff(i):
+    #lft_t = intervals[i][0].bit_decompose(bucket_sz)
+    #rgt_t = intervals[i][1].bit_decompose(bucket_sz)
+    #@for_range_opt(bucket_sz)
+    #def fffg(j):
+        #global lft
+        #global rgt
+        #lft[i][j] = lft_t[j]
+        #rgt[i][j] = rgt_t[j]
 
-@for_range_opt_multithread(8, R)
+
+@for_range_opt_multithread(threads, R)
 def g(i):
     global agg
     global in_interval_l
     global in_interval_r
     global in_interval_f
-    global left, right
+    #global lft
+    #global rgt
     @for_range_opt(c)
     def h(j):
         global in_interval_l
         global in_interval_r
         global in_interval_f
-        global left, right
-        #db_small = db[i][j]
+        #global lft
+        #global rgt
+        # option 0, bucket_sz bitsiwth comparison by explicit bit decomp
+        #db_small = db[i][j].bit_decompose(bucket_sz)
+        #lft = intervals[j][0].bit_decompose(bucket_sz)
+        #rgt = intervals[j][1].bit_decompose(bucket_sz)
+        #in_interval_l[i][j] = sbitint.bit_less_than(lft[j], db_small)
+        #in_interval_r[i][j] = sbitint.bit_less_than(db_small, rgt[j])
+        
+        # option 1, bucket_sz + 1 bitwidth comparison without explicit bit decomp
         in_interval_l[i][j] = intervals[j][0].less_than(db[i][j], bucket_sz)
         in_interval_r[i][j] = db[i][j].less_than(intervals[j][1], bucket_sz)
+        
+        # option 2, full bitwidth comparisons
         #in_interval_l[i][j] = (intervals[j][0] < db[i][j])
         #in_interval_r[i][j] = (intervals[j][1] > db[i][j])
+        
+        # common
         in_interval_f[i] = in_interval_f[i] & in_interval_l[i][j]
         in_interval_f[i] = in_interval_f[i] & in_interval_r[i][j]
 
-@for_range_opt_multithread(8, R)
+@for_range_opt_multithread(threads, R)
 def g(i):
     global activated_val
     global in_interval_f
@@ -95,4 +120,19 @@ print_ln('Answer is: %s', agg)
 #for i in range(len(bts)):
     #bts[i] = bts[i].reveal()
     #print_ln('%d th bits is %s: ', (i, bts[i]))
- 
+
+#aa = sint(513)
+#bb = sint(7)
+#aaa = aa.bit_decompose(bucket_sz)
+#bbb = bb.bit_decompose(bucket_sz)
+#cp = sbitint.bit_less_than(aaa, bbb) 
+#cp = cp.reveal()
+#print_ln('x < y is %s', cp)
+# this less_than with param 8 will do a 9-bit comparison
+#cpp = aa.less_than(bb, bucket_sz)
+#cpp = cpp.reveal()
+#print_ln('x < y is %s', cpp)
+#cpp = aa.less_than(bb)
+#cpp = cpp.reveal()
+#print_ln('x < y is %s', cpp)
+
