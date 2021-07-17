@@ -113,6 +113,7 @@ def g(i):
     agg = agg + activated_val[i]
 
 agg = agg.reveal()
+print_ln('B = %s | R = %s | #conds = %s | #threads %s', bucket_sz, R, c, threads)
 print_ln('Answer is: %s', agg)
 
 #bts = (db[7][0]).bit_decompose(8)
