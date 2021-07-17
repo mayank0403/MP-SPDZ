@@ -5,7 +5,8 @@
 # no of conditions
 c = 5
 # no of records in DB
-R = (1 << 16)
+logR = 16
+R = (1 << logR)
 bucket_sz = 8
 threads = 8
 # no of features in DB
@@ -113,7 +114,7 @@ def g(i):
     agg = agg + activated_val[i]
 
 agg = agg.reveal()
-print_ln('B = %s | R = %s | #conds = %s | #threads %s', bucket_sz, R, c, threads)
+print_ln('log(B) = %s | log(R) = %s | #conds = %s | #threads %s', bucket_sz, logR, c, threads)
 print_ln('Answer is: %s', agg)
 
 #bts = (db[7][0]).bit_decompose(8)
