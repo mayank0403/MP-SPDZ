@@ -27,3 +27,5 @@ do
     ./compile.py -Z 3 -R 128 "dorydb_roundopt_""$i""_""$3""_""$4""_$5"".mpc"
 done
 
+# TODO: Compile separately for malicious with 128 - 40 bits only
+

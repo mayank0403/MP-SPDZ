@@ -2,35 +2,61 @@
 
 set -e
 
-if [ $# -lt 7 ]
+if [ $# -lt 9 ]
 then
-    #echo "Script expects ROLE SEVER_0_IP LAN/WAN Records BucketSize Conditions Threads"
-    echo "Script expects ROLE SEVER_0_IP LAN/WAN Records BucketSize Conditions Threads"
+    echo "Script expects Records_Begin Records_End BucketSize Conditions Threads ROLE SEVER_0_IP LAN/WAN SINGLE_SERVER<S/M>"
     exit
 fi
 
-echo "Party #$1"
-echo "Server_0 IP Address $2"
-echo "Network Configuration $3"
-echo "Records = 1 << $4"
-echo "BucketSize or Comparison Bitwidth = 1 << $5"
-echo "Predicate Count or Condition Count = $6"
-echo "Threads = $7"
+echo "Records_Begin = 1 << $1"
+echo "Records_End = 1 << $2"
+echo "BucketSize or Comparison Bitwidth = 1 << $3"
+echo "Predicate Count or Condition Count = $4"
+echo "Threads = $5"
+echo "Party #$6"
+echo "Server_0 IP Address $7"
+echo "Network Configuration $8"
+echo "Single Server or Multi $9"
+echo $(date)
 
 #touch bench_results.txt
 #echo "Network Configuration $3" >> bench_results.txt
 #echo $(date) >> bench_results.txt
 
-if [ "$3" = "WAN" ]
+if [ "$8" = "WAN" ]
 then
     echo "TODO: Script will run wan.sh here"
+    ./wan.sh
+    ping -c 5 localhost
+    ping -c 5 $7
 fi
 
-for i in $(seq 4 2 16)
-do
-    echo "Working on iteration $i"
-    echo "Multithreaded file ..."
-    python3 generate_file.py Programs/Source/dorydb_mthread_template.mpc Programs/Source/dorydb_mthread_12_8_5_8.mpc 16 8 5 8
-    echo "Round-optimal file ..."
-done
+if [ "$9" = "S" ]
+then
+    echo "Running all 3 parties on single machine"
+    for i in $(seq $1 2 $2)
+    do
+        echo "Working on iteration $i"
+        echo "Running SH Multithreaded file ..."
+        Scripts/ring.sh "dorydb_mthread_""$i""_""$3""_""$4""_$5"
+        #./compile.py -Z 3 -R 128 "dorydb_mthread_""$i""_""$3""_""$4""_$5"
+        
+        echo "Running SH Round-optimal file ..."
+        Scripts/ring.sh "dorydb_roundopt_""$i""_""$3""_""$4""_$5"
+        #./compile.py -Z 3 -R 128 "dorydb_roundopt_""$i""_""$3""_""$4""_$5"
+    done
+fi
+
+if [ "$9" = "M" ]
+then
+    echo "Running all 3 parties on different machines"
+    echo "TODO: Not yet implemeted in bash script"
+fi
+
+if [ "$8" = "WAN" ]
+then
+    ./wan-reset.sh
+    ping -c 5 localhost
+    ping -c 5 $7
+fi
 
