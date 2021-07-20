@@ -65,11 +65,12 @@ def g(i):
     global in_interval_f
     #global lft
     #global rgt
-    @for_range_parallel(c, c)
-    def h(j):
-        global in_interval_l
-        global in_interval_r
-        global in_interval_f
+    #@for_range_parallel(c, c)
+    #def h(j):
+    for j in range(c):
+        #global in_interval_l
+        #global in_interval_r
+        #global in_interval_f
         #global lft
         #global rgt
         # option 0, bucket_sz bitsiwth comparison by explicit bit decomp
