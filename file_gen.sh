@@ -19,13 +19,16 @@ do
     echo "Working on iteration $i"
     echo "Generating Multithreaded file ..."
     python3 generate_file.py "Programs/Source/dorydb_mthread_template.mpc" "Programs/Source/dorydb_mthread_""$i""_""$3""_""$4""_$5"".mpc" "$i" "$3" "$4" "$5"
-    echo "Compiling Multithreaded file ..."
+    echo "Compiling SH Multithreaded file ..."
     ./compile.py -Z 3 -R 128 "dorydb_mthread_""$i""_""$3""_""$4""_$5"".mpc"
+    echo "Compiling Mal Multithreaded file ..."
+    ./compile.py -Z 3 -R 88 "dorydb_mthread_mal_""$i""_""$3""_""$4""_$5"".mpc"
+    
     echo "Generating Round-optimal file ..."
     python3 generate_file.py "Programs/Source/dorydb_roundopt_template.mpc" "Programs/Source/dorydb_roundopt_""$i""_""$3""_""$4""_$5"".mpc" "$i" "$3" "$4" "$5"
-    echo "Compiling Round-optimal file ..."
+    echo "Compiling SH Round-optimal file ..."
     ./compile.py -Z 3 -R 128 "dorydb_roundopt_""$i""_""$3""_""$4""_$5"".mpc"
+    echo "Compiling Mal Round-optimal file ..."
+    ./compile.py -Z 3 -R 88 "dorydb_roundopt_mal_""$i""_""$3""_""$4""_$5"".mpc"
 done
-
-# TODO: Compile separately for malicious with 128 - 40 bits only
 
