@@ -5,7 +5,7 @@
 # no of conditions
 c = 5
 # no of records in DB
-logR = 16
+logR = 12
 R = (1 << logR)
 bucket_sz = 8
 threads = 8
@@ -67,7 +67,7 @@ def fff(i):
         #rgt[i][j] = rgt_t[j]
 
 
-@for_range_opt_multithread(threads, R)
+@for_range_multithread(threads, R, R)
 def g(i):
     global agg
     global in_interval_l
@@ -75,11 +75,12 @@ def g(i):
     global in_interval_f
     #global lft
     #global rgt
-    @for_range_opt(c)
-    def h(j):
-        global in_interval_l
-        global in_interval_r
-        global in_interval_f
+    #@for_range_parallel(c, c)
+    #def h(j):
+    for j in range(c):
+        #global in_interval_l
+        #global in_interval_r
+        #global in_interval_f
         #global lft
         #global rgt
         # option 0, bucket_sz bitsiwth comparison by explicit bit decomp
@@ -101,7 +102,7 @@ def g(i):
         in_interval_f[i] = in_interval_f[i] & in_interval_l[i][j]
         in_interval_f[i] = in_interval_f[i] & in_interval_r[i][j]
 
-@for_range_opt_multithread(threads, R)
+@for_range_multithread(threads, R, R)
 def g(i):
     global activated_val
     global in_interval_f
