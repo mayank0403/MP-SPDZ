@@ -22,6 +22,7 @@ do
     echo "Compiling SH Multithreaded file ..."
     ./compile.py -Z 3 -R 128 "dorydb_mthread_""$i""_""$3""_""$4""_$5"".mpc"
     echo "Compiling Mal Multithreaded file ..."
+    cp "Programs/Source/dorydb_mthread_""$i""_""$3""_""$4""_$5"".mpc" "Programs/Source/dorydb_mthread_mal_""$i""_""$3""_""$4""_$5"".mpc"
     ./compile.py -Z 3 -R 88 "dorydb_mthread_mal_""$i""_""$3""_""$4""_$5"".mpc"
     
     echo "Generating Round-optimal file ..."
@@ -29,6 +30,7 @@ do
     echo "Compiling SH Round-optimal file ..."
     ./compile.py -Z 3 -R 128 "dorydb_roundopt_""$i""_""$3""_""$4""_$5"".mpc"
     echo "Compiling Mal Round-optimal file ..."
+    cp "Programs/Source/dorydb_roundopt_""$i""_""$3""_""$4""_$5"".mpc" "Programs/Source/dorydb_roundopt_mal_""$i""_""$3""_""$4""_$5"".mpc"
     ./compile.py -Z 3 -R 88 "dorydb_roundopt_mal_""$i""_""$3""_""$4""_$5"".mpc"
 done
 
