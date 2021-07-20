@@ -28,7 +28,7 @@ then
     echo "TODO: Script will run wan.sh here"
     ./wan.sh
     ping -c 5 localhost
-    ping -c 5 $7
+    ping -c 5 "$7"
 fi
 
 if [ "$9" = "S" ]
@@ -54,13 +54,27 @@ fi
 if [ "$9" = "M" ]
 then
     echo "Running all 3 parties on different machines"
-    echo "TODO: Not yet implemeted in bash script"
+    for i in $(seq $1 2 $2)
+    do
+        echo "Working on iteration $i"
+        echo "Running SH Multithreaded file ..."
+        ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
+        
+        echo "Running SH Round-optimal file ..."
+        ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_roundopt_""$i""_""$3""_""$4""_$5" -pn 32000 
+        
+        echo "Running Mal Multithreaded file ..."
+        ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+        
+        echo "Running Mal Round-optimal file ..."
+        ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_roundopt_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+    done
 fi
 
 if [ "$8" = "WAN" ]
 then
     ./wan-reset.sh
     ping -c 5 localhost
-    ping -c 5 $7
+    ping -c 5 "$7"
 fi
 
