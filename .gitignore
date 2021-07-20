@@ -20,6 +20,8 @@ config_mine.py
 *.tmp
 callgrind.out.*
 HOSTS*
+file_gen_log.txt
+bench_log.txt
 
 # Vim
 .*.swp
