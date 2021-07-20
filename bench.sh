@@ -39,11 +39,15 @@ then
         echo "Working on iteration $i"
         echo "Running SH Multithreaded file ..."
         Scripts/ring.sh "dorydb_mthread_""$i""_""$3""_""$4""_$5"
-        #./compile.py -Z 3 -R 128 "dorydb_mthread_""$i""_""$3""_""$4""_$5"
         
         echo "Running SH Round-optimal file ..."
         Scripts/ring.sh "dorydb_roundopt_""$i""_""$3""_""$4""_$5"
-        #./compile.py -Z 3 -R 128 "dorydb_roundopt_""$i""_""$3""_""$4""_$5"
+        
+        echo "Running Mal Multithreaded file ..."
+        Scripts/ps-rep-ring.sh "dorydb_mthread_mal_""$i""_""$3""_""$4""_$5"
+        
+        echo "Running Mal Round-optimal file ..."
+        Scripts/ps-rep-ring.sh "dorydb_roundopt_mal_""$i""_""$3""_""$4""_$5"
     done
 fi
 
