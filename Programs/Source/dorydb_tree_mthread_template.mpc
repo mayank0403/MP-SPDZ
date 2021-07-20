@@ -27,7 +27,6 @@ activated_val_r = Array(nodes, sint)
 def g(i):
     global in_interval_l
     global in_interval_r
-    # option 1, bucket_sz + 1 bitwidth comparison without explicit bit decomp
     in_interval_l[i] = coveringset[0].equal(i, depth)
     in_interval_r[i] = coveringset[1].equal(i, depth)
 
