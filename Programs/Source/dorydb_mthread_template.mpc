@@ -1,9 +1,3 @@
-# no of conditions
-c = 5
-# no of records in DB
-logR = 14
-bucket_sz = 8
-threads = 8
 R = (1 << logR)
 # no of features in DB
 # assuming = c now
@@ -63,7 +57,7 @@ def fff(i):
         #rgt[i][j] = rgt_t[j]
 
 
-@for_range_opt_multithread(threads, R)
+@for_range_multithread(threads, R, R)
 def g(i):
     global agg
     global in_interval_l
@@ -71,7 +65,7 @@ def g(i):
     global in_interval_f
     #global lft
     #global rgt
-    @for_range_opt(c, 5000000)
+    @for_range_parallel(c, c)
     def h(j):
         global in_interval_l
         global in_interval_r
@@ -97,7 +91,7 @@ def g(i):
         in_interval_f[i] = in_interval_f[i] & in_interval_l[i][j]
         in_interval_f[i] = in_interval_f[i] & in_interval_r[i][j]
 
-@for_range_opt_multithread(threads, R)
+@for_range_multithread(threads, R, R)
 def g(i):
     global activated_val
     global in_interval_f
