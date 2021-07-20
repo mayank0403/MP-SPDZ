@@ -1,0 +1,46 @@
+
+RR = (1 << logR)
+nodes = RR - 1
+# this is okay
+depth = logR
+csetsize = 2 * depth
+
+tree = Array(nodes, sint)
+coveringset = Array(csetsize, sint)
+
+@for_range_opt_multithread(threads, nodes)
+def _(i):
+    tree[i] = sint((i) % 65)
+
+@for_range_opt(csetsize)
+def f(i):
+    coveringset[i] = sint(63)
+
+agg = sint(0)
+in_interval_l = Array(nodes, sintbit)
+in_interval_r = Array(nodes, sintbit)
+activated_val_l = Array(nodes, sint)
+activated_val_r = Array(nodes, sint)
+
+# there will be equality check twice on each node
+@for_range_multithread(threads, nodes, nodes)
+def g(i):
+    global in_interval_l
+    global in_interval_r
+    # option 1, bucket_sz + 1 bitwidth comparison without explicit bit decomp
+    in_interval_l[i] = coveringset[0].equal(i, depth)
+    in_interval_r[i] = coveringset[1].equal(i, depth)
+
+@for_range_multithread(threads, nodes, nodes)
+def g(i):
+    global activated_val_l
+    global activated_val_r
+    global in_interval_l
+    global in_interval_r
+    activated_val_l[i] = (in_interval_l[i]).if_else(tree[i], sint(0))
+    activated_val_r[i] = (in_interval_r[i]).if_else(tree[i], sint(0))
+
+# now addition is local, so ignoring that.
+    
+print_ln('log(R) = %s | #threads %s', logR, threads)
+
