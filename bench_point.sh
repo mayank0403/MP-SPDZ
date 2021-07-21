@@ -33,7 +33,7 @@ fi
 if [ "$8" = "WAN" ]
 then
     echo "TODO: Script will run wan.sh here"
-    ./wan.sh
+    ./wan.sh $9
     ping -c 5 localhost
     ping -c 5 "$7"
 fi
@@ -94,7 +94,7 @@ fi
 
 if [ "$8" = "WAN" ]
 then
-    ./wan-reset.sh
+    ./wan-reset.sh $9
     ping -c 5 localhost
     ping -c 5 "$7"
 fi
