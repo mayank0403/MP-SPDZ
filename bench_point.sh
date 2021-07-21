@@ -2,9 +2,9 @@
 
 set -e
 
-if [ $# -lt 9 ]
+if [ $# -lt 10 ]
 then
-    echo "Script expects Records_Begin Records_End BucketSize Conditions Threads ROLE SEVER_0_IP LAN/WAN SINGLE_SERVER<S/M>"
+    echo "Script expects Records_Begin Records_End BucketSize Conditions Threads ROLE SEVER_0_IP LAN/WAN SINGLE_SERVER<S/M> (Multi)T()hread)/R(oundopt)/B(oth)"
     exit
 fi
 
@@ -17,7 +17,14 @@ echo "Party #$6"
 echo "Server_0 IP Address $7"
 echo "Network Configuration $8"
 echo "Single Server or Multi $9"
+echo "Multitheaded / Roundopt / Both = ${10}"
 echo $(date)
+
+if [ "${10}" = "B" ]
+then
+    echo "Not implemented both"
+    exit
+fi
 
 #touch bench_results.txt
 #echo "Network Configuration $3" >> bench_results.txt
@@ -37,17 +44,24 @@ then
     for i in $(seq $1 2 $2)
     do
         echo "Working on iteration $i"
-        echo "Running SH Multithreaded file ..."
-        Scripts/ring.sh "dorydb_point_mthread_""$i""_""$3""_""$4""_$5"
-        
-        echo "Running SH Round-optimal file ..."
-        Scripts/ring.sh "dorydb_point_roundopt_""$i""_""$3""_""$4""_$5"
-        
-        echo "Running Mal Multithreaded file ..."
-        Scripts/ps-rep-ring.sh "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5"
-        
-        echo "Running Mal Round-optimal file ..."
-        Scripts/ps-rep-ring.sh "dorydb_point_roundopt_mal_""$i""_""$3""_""$4""_$5"
+
+        if [ "${10}" = "T" ]
+        then
+            echo "Running SH Multithreaded file ..."
+            Scripts/ring.sh "dorydb_point_mthread_""$i""_""$3""_""$4""_$5"
+            
+            echo "Running Mal Multithreaded file ..."
+            Scripts/ps-rep-ring.sh "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5"
+        fi
+
+        if [ "${10}" = "R" ]
+        then
+            echo "Running SH Round-optimal file ..."
+            Scripts/ring.sh "dorydb_point_roundopt_""$i""_""$3""_""$4""_$5"
+            
+            echo "Running Mal Round-optimal file ..."
+            Scripts/ps-rep-ring.sh "dorydb_point_roundopt_mal_""$i""_""$3""_""$4""_$5"
+        fi
     done
 fi
 
@@ -57,17 +71,24 @@ then
     for i in $(seq $1 2 $2)
     do
         echo "Working on iteration $i"
-        echo "Running SH Multithreaded file ..."
-        ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_point_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
-        
-        echo "Running SH Round-optimal file ..."
-        ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_point_roundopt_""$i""_""$3""_""$4""_$5" -pn 32000 
-        
-        echo "Running Mal Multithreaded file ..."
-        ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
-        
-        echo "Running Mal Round-optimal file ..."
-        ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_point_roundopt_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+
+        if [ "${10}" = "T" ]
+        then
+            echo "Running SH Multithreaded file ..."
+            ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_point_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
+            
+            echo "Running Mal Multithreaded file ..."
+            ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+        fi
+
+        if [ "${10}" = "R" ]
+        then
+            echo "Running SH Round-optimal file ..."
+            ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_point_roundopt_""$i""_""$3""_""$4""_$5" -pn 32000 
+            
+            echo "Running Mal Round-optimal file ..."
+            ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_point_roundopt_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+        fi
     done
 fi
 
