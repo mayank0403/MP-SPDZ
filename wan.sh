@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bwlimit=10000mbit
+bwlimit=80000mbit
 delay=7ms
 
 sudo tc qdisc del dev lo root
