@@ -3,9 +3,9 @@
 set -e
 
 # only records are used in Tree and other vars ignored
-if [ $# -lt 10 ]
+if [ $# -lt 11 ]
 then
-    echo "Script expects Records_Begin Records_End BucketSize Conditions Threads ROLE SEVER_0_IP LAN/WAN SINGLE_SERVER<S/M> (Multi)T()hread)/R(oundopt)/B(oth)"
+    echo "Script expects Records_Begin Records_End BucketSize Conditions Threads ROLE SEVER_0_IP LAN/WAN SINGLE_SERVER<S/M> (Multi)T()hread)/R(oundopt)/B(oth) (m)al/(s)h"
     exit
 fi
 
@@ -17,6 +17,7 @@ echo "Server_0 IP Address $7"
 echo "Network Configuration $8"
 echo "Single Server or Multi $9"
 echo "Multitheaded / Roundopt / Both = ${10}"
+echo "Malicious / Semi-honest = ${11}"
 echo $(date)
 
 if [ "${10}" = "B" ]
@@ -73,11 +74,17 @@ then
 
         if [ "${10}" = "T" ]
         then
-            echo "Running SH Multithreaded file ..."
-            ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_tree_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
+            if [ "${11}" = "s" ]
+            then
+                echo "Running SH Multithreaded file ..."
+                ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_tree_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
+            fi
             
-            echo "Running Mal Multithreaded file ..."
-            ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_tree_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+            if [ "${11}" = "m" ]
+            then
+                echo "Running Mal Multithreaded file ..."
+                ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_tree_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+            fi
         fi
 
         if [ "${10}" = "R" ]
