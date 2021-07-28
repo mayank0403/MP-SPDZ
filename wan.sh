@@ -1,7 +1,7 @@
 #!/bin/bash
 
-bwlimit=80000mbit
-delay=7ms
+bwlimit=5gbps
+delay=10ms
 
 if [ $# -lt 1 ]
 then
