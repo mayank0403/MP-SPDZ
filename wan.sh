@@ -17,8 +17,8 @@ fi
 
 if [ "$1" = "M" ]
 then
-    sudo tc qdisc del dev ens3 root
-    sudo tc qdisc add dev ens3 root netem rate $bwlimit delay $delay
+    sudo tc qdisc del dev ens5 root
+    sudo tc qdisc add dev ens5 root netem rate $bwlimit delay $delay
 fi
 
 echo rate $bwlimit delay $delay

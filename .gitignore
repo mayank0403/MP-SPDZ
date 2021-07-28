@@ -22,10 +22,16 @@ callgrind.out.*
 HOSTS*
 file_gen_log.txt
 bench_log.txt
+bench_log_lan.txt
+bench_log_wan.txt
 file_gen_point_log.txt
 bench_point_log.txt
+bench_point_log_lan.txt
+bench_point_log_wan.txt
 file_gen_tree_log.txt
 bench_tree_log.txt
+bench_tree_log_lan.txt
+bench_tree_log_wan.txt
 
 # Vim
 .*.swp

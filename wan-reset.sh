@@ -13,6 +13,6 @@ fi
 
 if [ "$1" = "M" ]
 then
-    sudo tc qdisc del dev ens3 root
+    sudo tc qdisc del dev ens5 root
 fi
 
