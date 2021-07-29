@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bwlimit=5gbps
+bwlimit=375mbps
 delay=10ms
 
 if [ $# -lt 1 ]
