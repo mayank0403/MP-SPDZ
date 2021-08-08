@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "MOD = -DRING_SIZE=88" >> CONFIG.mine
+echo "MOD = -DRING_SIZE=32" >> CONFIG.mine
 
-echo "Set MP-SPDZ bitwidth of 88"
+echo "Set MP-SPDZ bitwidth of 32"
 echo "Recompiling VMs"
 
 make clean
