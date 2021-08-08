@@ -41,7 +41,7 @@ do
         then
             echo "Compiling Mal Multithreaded file ..."
             cp "Programs/Source/dorydb_point_mthread_""$i""_""$3""_""$4""_$5"".mpc" "Programs/Source/dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5"".mpc"
-            ./compile.py -Z 3 -R 88 "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5"".mpc"
+            ./compile.py -Z 3 -R 32 "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5"".mpc"
         fi
     fi
 

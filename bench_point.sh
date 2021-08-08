@@ -78,23 +78,23 @@ then
             if [ "${11}" = "s" ]
             then
                 echo "Running SH Multithreaded file ..."
-                ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_point_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
+                ./replicated-ring-party.x -S 80 -p "$6" -h "$7" "dorydb_point_mthread_""$i""_""$3""_""$4""_$5" -pn 32000 
             fi
             
             if [ "${11}" = "m" ]
             then
                 echo "Running Mal Multithreaded file ..."
-                ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+                ./ps-rep-ring-party.x -S 80 -p "$6" -h "$7" "dorydb_point_mthread_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
             fi
         fi
 
         if [ "${10}" = "R" ]
         then
             echo "Running SH Round-optimal file ..."
-            ./replicated-ring-party.x -p "$6" -h "$7" "dorydb_point_roundopt_""$i""_""$3""_""$4""_$5" -pn 32000 
+            ./replicated-ring-party.x -S 80 -p "$6" -h "$7" "dorydb_point_roundopt_""$i""_""$3""_""$4""_$5" -pn 32000 
             
             echo "Running Mal Round-optimal file ..."
-            ./ps-rep-ring-party.x -p "$6" -h "$7" "dorydb_point_roundopt_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
+            ./ps-rep-ring-party.x -S 80 -p "$6" -h "$7" "dorydb_point_roundopt_mal_""$i""_""$3""_""$4""_$5" -pn 32000 
         fi
     done
 fi
